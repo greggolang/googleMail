@@ -6,7 +6,14 @@ import (
 	gomail "gopkg.in/mail.v2"
 )
 
-func SendEmail(to, from, subject, body, serverAddress, serverUser, serverPassword string, serverPort int) error {
+type MailConfig struct {
+	Address  string
+	Port     int
+	User     string
+	Password string
+}
+
+func (c MailConfig) SendEmail(to, from, subject, body string) error {
 
 	m := gomail.NewMessage()
 
@@ -18,7 +25,7 @@ func SendEmail(to, from, subject, body, serverAddress, serverUser, serverPasswor
 
 	m.SetBody("text/plain", body)
 
-	d := gomail.NewDialer(serverAddress, serverPort, serverUser, serverPassword)
+	d := gomail.NewDialer(c.Address, c.Port, c.User, c.Password)
 
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
